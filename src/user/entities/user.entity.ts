@@ -1,5 +1,7 @@
 import { Role } from 'src/utility/common/enums/Role.enum';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -7,6 +9,8 @@ import {
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { BadRequestException } from '@nestjs/common';
 
 @Entity('users')
 export class UserEntity {
@@ -48,4 +52,14 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updatedAt: Timestamp;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    try {
+      this.password = await bcrypt.hash(this.password, 10);
+    } catch (error) {
+      throw new BadRequestException('Error while hashing the password');
+    }
+  }
 }
