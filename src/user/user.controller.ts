@@ -14,6 +14,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { UserEntity } from './entities/user.entity';
 import { SignInDto } from './dto/signin.dto';
+import { CurrentUser } from 'src/utility/decorators/current-user.decorator';
 
 @Controller('users')
 export class UserController {
@@ -59,5 +60,10 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Get('me')
+  async me(@CurrentUser() currentUser: UserEntity) {
+    return currentUser;
   }
 }

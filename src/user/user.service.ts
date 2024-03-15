@@ -50,7 +50,7 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async findOne(id: number): Promise<UserEntity> {
+  async findOne(id: any): Promise<UserEntity> {
     return await this.userRepository.findOne({ where: { id } });
   }
 
