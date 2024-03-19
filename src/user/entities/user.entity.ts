@@ -5,12 +5,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException } from '@nestjs/common';
+import { CategoryEntity } from 'src/categories/entities/category.entity';
+import { ProductEntity } from 'src/products/entities/product.entity';
+import { ReviewEntity } from 'src/reviews/entities/review.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -62,4 +66,13 @@ export class UserEntity {
       throw new BadRequestException('Error while hashing the password');
     }
   }
+
+  @OneToMany(() => CategoryEntity, (cat) => cat.addedBy)
+  categories: CategoryEntity[];
+
+  @OneToMany(() => ProductEntity, (prod) => prod.addedBy)
+  products: ProductEntity[];
+
+  @OneToMany(() => ReviewEntity, (review) => review.user)
+  reviews: ReviewEntity[];
 }

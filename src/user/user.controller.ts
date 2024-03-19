@@ -1,3 +1,4 @@
+import { AuthorizeGuard } from './../utility/guards/authorization.guard';
 import {
   Controller,
   Get,
@@ -7,6 +8,8 @@ import {
   Param,
   Delete,
   NotFoundException,
+  UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,10 +18,19 @@ import { SignUpDto } from './dto/signup.dto';
 import { UserEntity } from './entities/user.entity';
 import { SignInDto } from './dto/signin.dto';
 import { CurrentUser } from 'src/utility/decorators/current-user.decorator';
+import { AuthenticationGuard } from 'src/utility/guards/authentication.guard';
+import { AuthorizeRoles } from 'src/utility/decorators/authorize-roles.decorator';
+import { Role } from 'src/utility/common/enums/Role.enum';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @UseGuards(AuthenticationGuard)
+  @Get('me')
+  me(@CurrentUser() currentUser: UserEntity) {
+    return currentUser;
+  }
 
   @Post('signup')
   async signup(@Body() signUpDto: SignUpDto): Promise<UserEntity> {
@@ -39,6 +51,7 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Role.ADMIN]))
   @Get()
   async findAll(): Promise<UserEntity[]> {
     return await this.userService.findAll();
@@ -60,10 +73,5 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
-  }
-
-  @Get('me')
-  async me(@CurrentUser() currentUser: UserEntity) {
-    return currentUser;
   }
 }
