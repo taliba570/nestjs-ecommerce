@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   Timestamp,
@@ -79,4 +80,7 @@ export class UserEntity {
 
   @OneToMany(() => OrderEntity, (order) => order.updatedBy)
   ordersUpdatedBy: OrderEntity[];
+
+  @ManyToOne(() => OrderEntity, (order) => order.user)
+  orders: OrderEntity[];
 }
