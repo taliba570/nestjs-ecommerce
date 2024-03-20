@@ -1,4 +1,5 @@
 import { CategoryEntity } from 'src/categories/entities/category.entity';
+import { OrdersProductsEntity } from 'src/orders/entities/orders-products.entity';
 import { ReviewEntity } from 'src/reviews/entities/review.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
 import {
@@ -52,4 +53,7 @@ export class ProductEntity {
 
   @OneToMany(() => ReviewEntity, (review) => review.product)
   reviews: ReviewEntity[];
+
+  @OneToMany(() => OrdersProductsEntity, (op) => op.product)
+  orderProducts: OrdersProductsEntity[];
 }

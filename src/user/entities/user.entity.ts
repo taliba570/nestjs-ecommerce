@@ -15,6 +15,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CategoryEntity } from 'src/categories/entities/category.entity';
 import { ProductEntity } from 'src/products/entities/product.entity';
 import { ReviewEntity } from 'src/reviews/entities/review.entity';
+import { OrderEntity } from 'src/orders/entities/order.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -75,4 +76,7 @@ export class UserEntity {
 
   @OneToMany(() => ReviewEntity, (review) => review.user)
   reviews: ReviewEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.updatedBy)
+  ordersUpdatedBy: OrderEntity[];
 }
